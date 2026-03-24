@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTC 量化交易報告</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, sans-serif;
+    background: #1a1916;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(138,158,140,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(184,122,114,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 60% 20%, rgba(154,172,184,0.10) 0%, transparent 50%);
+    padding: 40px 36px;
+    color: #e8e3dc;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Glass card ── */
+  .glass {
+    background: rgba(255,255,255,0.055);
+    backdrop-filter: blur(28px) saturate(1.4);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 18px;
+    box-shadow:
+      0 2px 0 0 rgba(255,255,255,0.06) inset,
+      0 1px 32px rgba(0,0,0,0.35),
+      0 0 0 0.5px rgba(0,0,0,0.3);
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .glass::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  }
+
+  .glass-sm {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    box-shadow: 0 1px 0 0 rgba(255,255,255,0.05) inset, 0 4px 20px rgba(0,0,0,0.25);
+    padding: 14px 16px;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  .header-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f0ebe3;
+    letter-spacing: -0.3px;
+  }
+  .header-left p {
+    font-size: 12px;
+    color: rgba(232,227,220,0.4);
+    margin-top: 3px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 12px;
+    color: rgba(232,227,220,0.4);
+    line-height: 1.7;
+  }
+
+  /* ── Grids ── */
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-2-1 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .col-stack { display: flex; flex-direction: column; gap: 14px; }
+
+  /* ── Label ── */
+  .label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: rgba(232,227,220,0.38);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    margin-bottom: 14px;
+  }
+
+  /* ── Price ── */
+  .price-num {
+    font-size: 44px;
+    font-weight: 700;
+    color: #f0ebe3;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .price-sub { font-size: 12px; color: rgba(232,227,220,0.35); margin-top: 8px; }
+
+  /* ── Signal ── */
+  .signal-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+  }
+  .signal-flat {
+    background: rgba(138,133,127,0.18);
+    color: rgba(232,227,220,0.6);
+    border: 1px solid rgba(138,133,127,0.25);
+  }
+  .signal-long {
+    background: rgba(138,158,140,0.18);
+    color: #a0b8a2;
+    border: 1px solid rgba(138,158,140,0.3);
+  }
+  .signal-short {
+    background: rgba(184,122,114,0.18);
+    color: #c4948c;
+    border: 1px solid rgba(184,122,114,0.3);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-flat { background: rgba(138,133,127,0.6); }
+  .dot-long { background: #8a9e8c; box-shadow: 0 0 6px rgba(138,158,140,0.6); }
+  .dot-short { background: #b87a72; box-shadow: 0 0 6px rgba(184,122,114,0.6); }
+
+  .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; }
+  .stat-label { color: rgba(232,227,220,0.4); }
+  .stat-val { font-weight: 600; color: #e8e3dc; }
+
+  /* ── Fear & Greed ── */
+  .fg-num {
+    font-size: 52px;
+    font-weight: 800;
+    color: #c4948c;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .fg-tag {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #c4948c;
+    background: rgba(184,122,114,0.12);
+    border: 1px solid rgba(184,122,114,0.2);
+    padding: 2px 10px;
+    border-radius: 100px;
+  }
+  .fg-bar-wrap { margin-top: 18px; }
+  .fg-bar-bg {
+    height: 5px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .fg-bar-fill {
+    height: 100%;
+    width: 11%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #8a9e8c, #c4aa82, #b87a72);
+  }
+  .fg-range { display: flex; justify-content: space-between; font-size: 10px; color: rgba(232,227,220,0.3); margin-top: 5px; }
+
+  /* ── Factors ── */
+  .factor-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+  }
+  .factor-row:last-child { border-bottom: none; }
+  .factor-name { width: 108px; color: rgba(232,227,220,0.4); flex-shrink: 0; font-size: 12px; }
+  .factor-bar-bg {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .factor-bar-pos { height: 100%; border-radius: 2px; background: #8a9e8c; }
+  .factor-bar-neg { height: 100%; border-radius: 2px; background: #b87a72; }
+  .factor-num { width: 50px; text-align: right; font-weight: 600; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .pos { color: #8a9e8c; }
+  .neg { color: #b87a72; }
+
+  /* ── Regime ── */
+  .regime-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+  }
+  .regime-row:last-child { border-bottom: none; }
+  .regime-label { color: rgba(232,227,220,0.4); }
+  .regime-trending { color: #9aacb8; font-weight: 600; }
+  .regime-markup { color: #8a9e8c; font-weight: 600; }
+  .regime-neutral { color: rgba(232,227,220,0.5); font-weight: 600; }
+
+  /* ── Funding ── */
+  .funding-num { font-size: 34px; font-weight: 700; color: #8a9e8c; letter-spacing: -1px; line-height: 1; }
+  .funding-sub { font-size: 12px; color: rgba(232,227,220,0.35); margin-top: 6px; }
+
+  /* ── Tech signals ── */
+  .tech-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+  }
+  .tech-row:last-child { border-bottom: none; }
+  .tech-name { color: rgba(232,227,220,0.45); }
+  .badge {
+    padding: 3px 11px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .badge-flat { background: rgba(138,133,127,0.15); color: rgba(232,227,220,0.45); border: 1px solid rgba(138,133,127,0.2); }
+  .badge-long { background: rgba(138,158,140,0.15); color: #8a9e8c; border: 1px solid rgba(138,158,140,0.25); }
+  .badge-short { background: rgba(184,122,114,0.15); color: #b87a72; border: 1px solid rgba(184,122,114,0.25); }
+
+  /* ── Backtest table ── */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th {
+    text-align: left;
+    color: rgba(232,227,220,0.35);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 5px 8px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  td { padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(232,227,220,0.75); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.03); color: #e8e3dc; }
+  .rank-1 td { color: #e8e3dc; }
+  .rank-1 td:first-child { font-weight: 600; }
+
+  /* ── Monte Carlo ── */
+  .mc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .mc-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .mc-lbl { font-size: 10px; color: rgba(232,227,220,0.35); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .mc-num { font-size: 19px; font-weight: 700; letter-spacing: -0.5px; }
+  .mc-p5 { color: #b87a72; }
+  .mc-p50 { color: #e8e3dc; }
+  .mc-p95 { color: #8a9e8c; }
+  .mc-footer { margin-top: 14px; display: flex; gap: 20px; font-size: 12px; color: rgba(232,227,220,0.4); flex-wrap: wrap; }
+  .mc-footer strong { color: #9aacb8; }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 14px 0; }
+
+  /* ── Footer ── */
+  .footer { margin-top: 28px; text-align: center; font-size: 11px; color: rgba(232,227,220,0.2); }
+
+  /* ── Glow accent ── */
+  .glow-green { text-shadow: 0 0 12px rgba(138,158,140,0.5); }
+  .glow-red   { text-shadow: 0 0 12px rgba(184,122,114,0.5); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <h1>今日 BTC 操作參考</h1>
+    <p>量化系統每日報告 · 技術面分析為主</p>
+  </div>
+  <div class="header-right">
+    <span>2026-03-23 &nbsp;21:00</span>
+    <span>Los Angeles</span>
+  </div>
+</div>
+
+<!-- Row 1 -->
+<div class="grid-3">
+
+  <div class="glass">
+    <div class="label">BTC 現價</div>
+    <div class="price-num">$70,642</div>
+    <div class="price-sub">OKX · BTC-USDT · 收盤價</div>
+  </div>
+
+  <div class="glass">
+    <div class="label">今日建議動作</div>
+    <div class="signal-pill signal-flat">
+      <span class="dot dot-flat"></span>
+      觀望，不動
+    </div>
+    <div class="stat-row"><span class="stat-label">系統信心度</span><span class="stat-val">30.0%</span></div>
+    <div class="stat-row"><span class="stat-label">若要建倉，最多</span><span class="stat-val">21.0% 資金</span></div>
+    <div class="stat-row"><span class="stat-label">綜合評分</span><span class="stat-val pos">+0.31 微偏多</span></div>
+  </div>
+
+  <div class="glass">
+    <div class="label">市場情緒 · Fear &amp; Greed Index</div>
+    <div class="fg-num">11</div>
+    <div class="fg-tag">極度恐慌</div>
+    <div class="fg-bar-wrap">
+      <div class="fg-bar-bg"><div class="fg-bar-fill"></div></div>
+      <div class="fg-range"><span>極度恐慌</span><span>極度貪婪</span></div>
+    </div>
+    <div class="price-sub" style="margin-top:10px;">市場情緒跌到谷底，歷史上這個位置往往是底部附近</div>
+  </div>
+
+</div>
+
+<!-- Row 2 -->
+<div class="grid-2-1">
+
+  <div class="glass">
+    <div class="label">鏈上因子評分 · 7 個維度看市場健康度</div>
+    <div class="factor-row">
+      <div class="factor-name">MVRV <span style="font-size:10px;opacity:0.5;">市值/實現價值</span></div>
+      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:47.9%"></div></div>
+      <div class="factor-num pos">+0.479</div>
+    </div>
+    <div class="factor-row">
+      <div class="factor-name">SOPR <span style="font-size:10px;opacity:0.5;">持幣者是否獲利賣出</span></div>
+      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:2.7%"></div></div>
+      <div class="factor-num pos">+0.027</div>
+    </div>
+    <div class="factor-row">
+      <div class="factor-name">SSR <span style="font-size:10px;opacity:0.5;">穩定幣購買力</span></div>
+      <div class="factor-bar-bg"><div class="factor-bar-neg" style="width:30%"></div></div>
+      <div class="factor-num neg">−0.300</div>
+    </div>
+    <div class="factor-row">
+      <div class="factor-name">Netflow <span style="font-size:10px;opacity:0.5;">幣從交易所流出</span></div>
+      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:46.5%"></div></div>
+      <div class="factor-num pos">+0.465</div>
+    </div>
+    <div class="factor-row">
+      <div class="factor-name">礦工流出</div>
+      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:46.7%"></div></div>
+      <div class="factor-num pos">+0.467</div>
+    </div>
+    <div class="factor-row">
+      <div class="factor-name">NVT <span style="font-size:10px;opacity:0.5;">網路估值比</span></div>
+      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:4.3%"></div></div>
+      <div class="factor-num pos">+0.043</div>
+    </div>
+    <div class="factor-row">
+      <div class="factor-name">Taker 比率 <span style="font-size:10px;opacity:0.5;">主動買賣比</span></div>
+      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:66.5%"></div></div>
+      <div class="factor-num pos">+0.665</div>
+    </div>
+  </div>
+
+  <div class="col-stack">
+    <div class="glass">
+      <div class="label">市場體制判斷</div>
+      <div class="regime-row">
+        <span class="regime-label">價格型態（HMM）</span>
+        <span class="regime-trending">上升趨勢中 ↗</span>
+      </div>
+      <div class="regime-row">
+        <span class="regime-label">鏈上結構</span>
+        <span class="regime-markup">牛市累積期</span>
+      </div>
+      <div class="regime-row">
+        <span class="regime-label">技術面權重</span>
+        <span class="regime-neutral">70%</span>
+      </div>
+      <div class="regime-row">
+        <span class="regime-label">鏈上面權重</span>
+        <span class="regime-neutral">30%</span>
+      </div>
+    </div>
+
+    <div class="glass">
+      <div class="label">資金費率 · OKX 永續合約</div>
+      <div class="funding-num">+0.0100%</div>
+      <div class="funding-sub">每 8 小時結算一次</div>
+      <div class="divider"></div>
+      <div class="funding-sub" style="color:rgba(138,158,140,0.75);">正費率：多單付錢給空單，代表市場做多意願仍強，但幅度溫和，尚未過熱</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Row 3 -->
+<div class="grid-2">
+
+  <div class="glass">
+    <div class="label">技術指標訊號 · 5 個策略各自的看法</div>
+    <div class="tech-row">
+      <span class="tech-name">EMA RSI 趨勢</span>
+      <span class="badge badge-flat">沒意見</span>
+    </div>
+    <div class="tech-row">
+      <span class="tech-name">MACD 動能</span>
+      <span class="badge badge-short">偏空 ▼</span>
+    </div>
+    <div class="tech-row">
+      <span class="tech-name">布林帶均值回歸</span>
+      <span class="badge badge-flat">沒意見</span>
+    </div>
+    <div class="tech-row">
+      <span class="tech-name">趨勢強度 ADX</span>
+      <span class="badge badge-short">偏空 ▼</span>
+    </div>
+    <div class="tech-row">
+      <span class="tech-name">OBV 能量背離</span>
+      <span class="badge badge-flat">沒意見</span>
+    </div>
+  </div>
+
+  <div class="glass">
+    <div class="label">歷史回測成績 · 過去 1 年 · 依風險調整報酬排名</div>
+    <table>
+      <tr>
+        <th>策略</th><th>Sharpe</th><th>勝率</th><th>報酬</th><th>最大虧損</th>
+      </tr>
+      <tr class="rank-1">
+        <td>MACD 動能 🥇</td>
+        <td class="pos">0.534</td>
+        <td>39.1%</td>
+        <td class="pos">+20.5%</td>
+        <td class="neg">-20.9%</td>
+      </tr>
+      <tr>
+        <td>EMA RSI 趨勢</td>
+        <td class="neg">-0.036</td>
+        <td>20.0%</td>
+        <td class="neg">-0.5%</td>
+        <td class="neg">-21.8%</td>
+      </tr>
+      <tr>
+        <td>OBV 能量背離</td>
+        <td class="neg">-0.207</td>
+        <td>57.1%</td>
+        <td class="pos">+2.1%</td>
+        <td class="neg">-7.5%</td>
+      </tr>
+      <tr>
+        <td>布林帶回歸</td>
+        <td class="neg">-0.272</td>
+        <td>54.5%</td>
+        <td class="neg">-0.4%</td>
+        <td class="neg">-12.8%</td>
+      </tr>
+      <tr>
+        <td>ADX 趨勢過濾</td>
+        <td class="neg">-0.302</td>
+        <td>31.6%</td>
+        <td class="neg">-11.7%</td>
+        <td class="neg">-40.6%</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- Monte Carlo -->
+<div class="glass">
+  <div class="label">隨機情境模擬 · Monte Carlo 1000 次 · 以最佳策略 MACD 動能試算 · 假設本金 $100,000</div>
+  <div class="mc-row">
+    <div class="mc-box">
+      <div class="mc-lbl">最壞 5% 情況</div>
+      <div class="mc-num mc-p5">$66,760</div>
+    </div>
+    <div class="mc-box">
+      <div class="mc-lbl">最可能結果（中位數）</div>
+      <div class="mc-num mc-p50">$112,202</div>
+    </div>
+    <div class="mc-box">
+      <div class="mc-lbl">最好 5% 情況</div>
+      <div class="mc-num mc-p95">$192,378</div>
+    </div>
+  </div>
+  <div class="mc-footer">
+    <span>1000 次模擬中有 <strong>63.8%</strong> 最終獲利</span>
+    <span>最壞情況單次虧損上限 <strong style="color:#b87a72;">−$33,240</strong>（VaR 5%）</span>
+    <span>Sharpe 信賴區間 <strong style="color:rgba(232,227,220,0.45);">[−0.95, 2.26]</strong>，波動仍大</span>
+  </div>
+</div>
+
+<div class="footer">
+  數據來源：OKX · Alternative.me · 量化系統自動產出 · 僅供個人參考，不構成任何投資建議
+</div>
+
+</body>
+</html>
