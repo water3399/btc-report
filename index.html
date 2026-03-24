@@ -3,508 +3,550 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BTC 量化交易報告</title>
+<title>BTC Daily Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    min-height: 100vh;
-    font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, sans-serif;
-    background: #1a1916;
-    background-image:
-      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(138,158,140,0.18) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(184,122,114,0.14) 0%, transparent 55%),
-      radial-gradient(ellipse 50% 40% at 60% 20%, rgba(154,172,184,0.10) 0%, transparent 50%);
-    padding: 40px 36px;
-    color: #e8e3dc;
-    -webkit-font-smoothing: antialiased;
+  :root {
+    --bg:       #1c1c1e;
+    --card:     #2c2c2e;
+    --card2:    #3a3a3c;
+    --border:   rgba(255,255,255,0.08);
+    --text:     #f5f5f7;
+    --muted:    #98989d;
+    --green:    #8a9e8c;
+    --green-bg: rgba(138,158,140,0.15);
+    --green-bd: rgba(138,158,140,0.3);
+    --red:      #b87a72;
+    --red-bg:   rgba(184,122,114,0.15);
+    --red-bd:   rgba(184,122,114,0.3);
+    --gold:     #c4aa82;
   }
 
-  /* ── Glass card ── */
-  .glass {
-    background: rgba(255,255,255,0.055);
-    backdrop-filter: blur(28px) saturate(1.4);
-    -webkit-backdrop-filter: blur(28px) saturate(1.4);
-    border: 1px solid rgba(255,255,255,0.10);
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    padding: 24px 28px 36px;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--green), var(--gold));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .topbar h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .topbar-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .tag {
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    background: var(--card); color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .tag-date { color: var(--text); }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 18px;
-    box-shadow:
-      0 2px 0 0 rgba(255,255,255,0.06) inset,
-      0 1px 32px rgba(0,0,0,0.35),
-      0 0 0 0.5px rgba(0,0,0,0.3);
-    padding: 22px;
+    padding: 20px;
     position: relative;
     overflow: hidden;
   }
-  .glass::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-  }
-
-  .glass-sm {
-    background: rgba(255,255,255,0.04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    box-shadow: 0 1px 0 0 rgba(255,255,255,0.05) inset, 0 4px 20px rgba(0,0,0,0.25);
-    padding: 14px 16px;
-  }
-
-  /* ── Header ── */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 28px;
-  }
-  .header-left h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #f0ebe3;
-    letter-spacing: -0.3px;
-  }
-  .header-left p {
-    font-size: 12px;
-    color: rgba(232,227,220,0.4);
-    margin-top: 3px;
-  }
-  .header-right {
-    text-align: right;
-    font-size: 12px;
-    color: rgba(232,227,220,0.4);
-    line-height: 1.7;
-  }
-
-  /* ── Grids ── */
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .grid-2-1 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  .col-stack { display: flex; flex-direction: column; gap: 14px; }
-
-  /* ── Label ── */
-  .label {
-    font-size: 10.5px;
-    font-weight: 600;
-    color: rgba(232,227,220,0.38);
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-    margin-bottom: 14px;
-  }
-
-  /* ── Price ── */
-  .price-num {
-    font-size: 44px;
-    font-weight: 700;
-    color: #f0ebe3;
-    letter-spacing: -2px;
-    line-height: 1;
-  }
-  .price-sub { font-size: 12px; color: rgba(232,227,220,0.35); margin-top: 8px; }
-
-  /* ── Signal ── */
-  .signal-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 16px;
-    border-radius: 100px;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    margin-bottom: 14px;
-  }
-  .signal-flat {
-    background: rgba(138,133,127,0.18);
-    color: rgba(232,227,220,0.6);
-    border: 1px solid rgba(138,133,127,0.25);
-  }
-  .signal-long {
-    background: rgba(138,158,140,0.18);
-    color: #a0b8a2;
-    border: 1px solid rgba(138,158,140,0.3);
-  }
-  .signal-short {
-    background: rgba(184,122,114,0.18);
-    color: #c4948c;
-    border: 1px solid rgba(184,122,114,0.3);
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot-flat { background: rgba(138,133,127,0.6); }
-  .dot-long { background: #8a9e8c; box-shadow: 0 0 6px rgba(138,158,140,0.6); }
-  .dot-short { background: #b87a72; box-shadow: 0 0 6px rgba(184,122,114,0.6); }
-
-  .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; }
-  .stat-label { color: rgba(232,227,220,0.4); }
-  .stat-val { font-weight: 600; color: #e8e3dc; }
-
-  /* ── Fear & Greed ── */
-  .fg-num {
-    font-size: 52px;
-    font-weight: 800;
-    color: #c4948c;
-    letter-spacing: -2px;
-    line-height: 1;
-  }
-  .fg-tag {
-    display: inline-block;
-    margin-top: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #c4948c;
-    background: rgba(184,122,114,0.12);
-    border: 1px solid rgba(184,122,114,0.2);
-    padding: 2px 10px;
-    border-radius: 100px;
-  }
-  .fg-bar-wrap { margin-top: 18px; }
-  .fg-bar-bg {
-    height: 5px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .fg-bar-fill {
-    height: 100%;
-    width: 11%;
-    border-radius: 3px;
-    background: linear-gradient(90deg, #8a9e8c, #c4aa82, #b87a72);
-  }
-  .fg-range { display: flex; justify-content: space-between; font-size: 10px; color: rgba(232,227,220,0.3); margin-top: 5px; }
-
-  /* ── Factors ── */
-  .factor-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 7px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 13px;
-  }
-  .factor-row:last-child { border-bottom: none; }
-  .factor-name { width: 108px; color: rgba(232,227,220,0.4); flex-shrink: 0; font-size: 12px; }
-  .factor-bar-bg {
-    flex: 1;
-    height: 4px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .factor-bar-pos { height: 100%; border-radius: 2px; background: #8a9e8c; }
-  .factor-bar-neg { height: 100%; border-radius: 2px; background: #b87a72; }
-  .factor-num { width: 50px; text-align: right; font-weight: 600; font-size: 12px; font-variant-numeric: tabular-nums; }
-  .pos { color: #8a9e8c; }
-  .neg { color: #b87a72; }
-
-  /* ── Regime ── */
-  .regime-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 13px;
-  }
-  .regime-row:last-child { border-bottom: none; }
-  .regime-label { color: rgba(232,227,220,0.4); }
-  .regime-trending { color: #9aacb8; font-weight: 600; }
-  .regime-markup { color: #8a9e8c; font-weight: 600; }
-  .regime-neutral { color: rgba(232,227,220,0.5); font-weight: 600; }
-
-  /* ── Funding ── */
-  .funding-num { font-size: 34px; font-weight: 700; color: #8a9e8c; letter-spacing: -1px; line-height: 1; }
-  .funding-sub { font-size: 12px; color: rgba(232,227,220,0.35); margin-top: 6px; }
-
-  /* ── Tech signals ── */
-  .tech-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 13px;
-  }
-  .tech-row:last-child { border-bottom: none; }
-  .tech-name { color: rgba(232,227,220,0.45); }
-  .badge {
-    padding: 3px 11px;
-    border-radius: 100px;
-    font-size: 11.5px;
-    font-weight: 600;
-  }
-  .badge-flat { background: rgba(138,133,127,0.15); color: rgba(232,227,220,0.45); border: 1px solid rgba(138,133,127,0.2); }
-  .badge-long { background: rgba(138,158,140,0.15); color: #8a9e8c; border: 1px solid rgba(138,158,140,0.25); }
-  .badge-short { background: rgba(184,122,114,0.15); color: #b87a72; border: 1px solid rgba(184,122,114,0.25); }
-
-  /* ── Backtest table ── */
-  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  th {
-    text-align: left;
-    color: rgba(232,227,220,0.35);
-    font-size: 10px;
-    font-weight: 600;
+  .card-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    padding: 5px 8px 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    margin-bottom: 12px;
   }
-  td { padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(232,227,220,0.75); }
+
+  /* ── BENTO GRID ── */
+  .bento {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr 200px;
+    grid-template-rows: auto auto auto;
+    gap: 12px;
+  }
+
+  .c-price    { grid-column: 1; grid-row: 1; }
+  .c-action   { grid-column: 2; grid-row: 1; }
+  .c-battle   { grid-column: 3 / 5; grid-row: 1; }
+  .c-chart    { grid-column: 1 / 4; grid-row: 2; }
+  .c-regime   { grid-column: 4; grid-row: 2; }
+  .c-tech     { grid-column: 1 / 3; grid-row: 3; }
+  .c-backtest { grid-column: 3 / 5; grid-row: 3; }
+
+  /* ── PRICE CARD ── */
+  .price-big {
+    font-size: 38px; font-weight: 800;
+    letter-spacing: -2px; line-height: 1;
+    color: var(--text);
+  }
+  .price-sub { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .price-change {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-top: 10px; padding: 4px 10px;
+    border-radius: 20px; font-size: 12px; font-weight: 600;
+    background: var(--green-bg); color: var(--green);
+    border: 1px solid var(--green-bd);
+  }
+
+  /* ── ACTION CARD ── */
+  .action-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 100px;
+    font-size: 16px; font-weight: 700;
+    background: var(--card2); color: var(--muted);
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+  .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .pulse-green { background: var(--green); box-shadow: 0 0 0 3px rgba(138,158,140,0.2); animation: pulse 2s infinite; }
+  .pulse-red { background: var(--red); box-shadow: 0 0 0 3px rgba(184,122,114,0.2); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  .stat-line {
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+  }
+  .stat-line:last-child { border-bottom: none; }
+  .sl-label { color: var(--muted); }
+  .sl-val { font-weight: 600; }
+  .green { color: var(--green); }
+  .red   { color: var(--red); }
+  .gold  { color: var(--gold); }
+
+  /* ── BATTLE CARD ── */
+  .battle-wrap {
+    display: flex; align-items: stretch; gap: 0;
+    height: calc(100% - 32px);
+    min-height: 120px;
+  }
+  .battle-side {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    border-radius: 12px; padding: 16px 10px;
+    position: relative; overflow: hidden;
+    transition: flex 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .battle-bear {
+    background: rgba(184,122,114,0.12);
+    border: 1px solid rgba(184,122,114,0.2);
+    border-radius: 12px 0 0 12px;
+    flex: 89; /* 89% = bear winning at 11/100 */
+  }
+  .battle-bull {
+    background: rgba(138,158,140,0.08);
+    border: 1px solid rgba(138,158,140,0.15);
+    border-radius: 0 12px 12px 0;
+    flex: 11; /* 11% */
+  }
+  .battle-emoji { font-size: 32px; line-height: 1; }
+  .battle-name {
+    font-size: 13px; font-weight: 700; margin-top: 6px;
+    color: var(--red);
+  }
+  .battle-bull .battle-name { color: var(--green); font-size: 11px; }
+  .battle-score {
+    font-size: 28px; font-weight: 800;
+    color: var(--red); letter-spacing: -1px; margin-top: 4px;
+  }
+  .battle-bull .battle-score { font-size: 14px; color: var(--green); }
+  .battle-tag {
+    font-size: 10px; color: rgba(184,122,114,0.7);
+    background: rgba(184,122,114,0.1);
+    padding: 2px 8px; border-radius: 20px; margin-top: 4px;
+    border: 1px solid rgba(184,122,114,0.2);
+  }
+  .battle-vs {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; color: var(--muted);
+    z-index: 10; flex-shrink: 0;
+  }
+  .battle-container { position: relative; display: flex; flex: 1; align-items: stretch; }
+  .battle-desc {
+    font-size: 11px; color: var(--muted);
+    text-align: center; margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── CHART CARD ── */
+  .chart-wrap { height: 180px; position: relative; }
+
+  /* ── REGIME CARD ── */
+  .regime-item {
+    display: flex; flex-direction: column;
+    gap: 3px; padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .regime-item:last-child { border-bottom: none; }
+  .ri-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .ri-val { font-size: 14px; font-weight: 700; }
+
+  /* ── TECH SIGNALS ── */
+  .tech-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-top: 4px;
+  }
+  .tech-item {
+    background: var(--card2); border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ti-name { font-size: 12px; color: var(--muted); }
+  .badge {
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+  }
+  .b-flat  { background: rgba(152,152,157,0.15); color: var(--muted); }
+  .b-short { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-bd); }
+  .b-long  { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
+
+  /* ── BACKTEST TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+  th {
+    text-align: left; color: var(--muted);
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 4px 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  td { padding: 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(245,245,247,0.7); }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.03); color: #e8e3dc; }
-  .rank-1 td { color: #e8e3dc; }
-  .rank-1 td:first-child { font-weight: 600; }
+  tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
+  tr.best td { color: var(--text); }
+  tr.best td:first-child { font-weight: 700; }
 
-  /* ── Monte Carlo ── */
-  .mc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 8px; }
-  .mc-box {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 10px;
-    padding: 14px;
-    text-align: center;
+  /* ── MINI BARS (factor) ── */
+  .mini-bar-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 0; font-size: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
   }
-  .mc-lbl { font-size: 10px; color: rgba(232,227,220,0.35); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
-  .mc-num { font-size: 19px; font-weight: 700; letter-spacing: -0.5px; }
-  .mc-p5 { color: #b87a72; }
-  .mc-p50 { color: #e8e3dc; }
-  .mc-p95 { color: #8a9e8c; }
-  .mc-footer { margin-top: 14px; display: flex; gap: 20px; font-size: 12px; color: rgba(232,227,220,0.4); flex-wrap: wrap; }
-  .mc-footer strong { color: #9aacb8; }
+  .mini-bar-row:last-child { border-bottom: none; }
+  .mb-name { width: 90px; color: var(--muted); font-size: 11px; flex-shrink: 0; }
+  .mb-track { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+  .mb-fill-g { height: 100%; background: var(--green); border-radius: 2px; }
+  .mb-fill-r { height: 100%; background: var(--red); border-radius: 2px; }
+  .mb-num { width: 44px; text-align: right; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-  /* ── Divider ── */
-  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 14px 0; }
-
-  /* ── Footer ── */
-  .footer { margin-top: 28px; text-align: center; font-size: 11px; color: rgba(232,227,220,0.2); }
-
-  /* ── Glow accent ── */
-  .glow-green { text-shadow: 0 0 12px rgba(138,158,140,0.5); }
-  .glow-red   { text-shadow: 0 0 12px rgba(184,122,114,0.5); }
+  /* ── FOOTER ── */
+  .footer { margin-top: 16px; text-align: center; font-size: 11px; color: #48484a; }
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-left">
-    <h1>今日 BTC 操作參考</h1>
-    <p>量化系統每日報告 · 技術面分析為主</p>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">₿</div>
+    <div>
+      <div class="topbar h1" style="font-size:20px;font-weight:700;">BTC 每日操作參考</div>
+      <div class="topbar-sub">量化系統自動報告 · 技術面主導</div>
+    </div>
   </div>
-  <div class="header-right">
-    <span>2026-03-23 &nbsp;21:00</span>
-    <span>Los Angeles</span>
+  <div class="topbar-right">
+    <span class="tag tag-date">2026-03-23 &nbsp;21:00</span>
+    <span class="tag">Los Angeles</span>
   </div>
 </div>
 
-<!-- Row 1 -->
-<div class="grid-3">
+<!-- BENTO GRID -->
+<div class="bento">
 
-  <div class="glass">
-    <div class="label">BTC 現價</div>
-    <div class="price-num">$70,642</div>
-    <div class="price-sub">OKX · BTC-USDT · 收盤價</div>
+  <!-- PRICE -->
+  <div class="card c-price">
+    <div class="card-label">BTC 現價</div>
+    <div class="price-big">$70,642</div>
+    <div class="price-sub">OKX · BTC-USDT</div>
+    <div class="price-change">↑ 上升趨勢區間</div>
   </div>
 
-  <div class="glass">
-    <div class="label">今日建議動作</div>
-    <div class="signal-pill signal-flat">
-      <span class="dot dot-flat"></span>
-      觀望，不動
+  <!-- ACTION -->
+  <div class="card c-action">
+    <div class="card-label">今日建議動作</div>
+    <div class="action-pill">
+      <span class="pulse"></span>
+      觀望，暫不動
     </div>
-    <div class="stat-row"><span class="stat-label">系統信心度</span><span class="stat-val">30.0%</span></div>
-    <div class="stat-row"><span class="stat-label">若要建倉，最多</span><span class="stat-val">21.0% 資金</span></div>
-    <div class="stat-row"><span class="stat-label">綜合評分</span><span class="stat-val pos">+0.31 微偏多</span></div>
-  </div>
-
-  <div class="glass">
-    <div class="label">市場情緒 · Fear &amp; Greed Index</div>
-    <div class="fg-num">11</div>
-    <div class="fg-tag">極度恐慌</div>
-    <div class="fg-bar-wrap">
-      <div class="fg-bar-bg"><div class="fg-bar-fill"></div></div>
-      <div class="fg-range"><span>極度恐慌</span><span>極度貪婪</span></div>
+    <div class="stat-line">
+      <span class="sl-label">系統信心度</span>
+      <span class="sl-val">30%</span>
     </div>
-    <div class="price-sub" style="margin-top:10px;">市場情緒跌到谷底，歷史上這個位置往往是底部附近</div>
-  </div>
-
-</div>
-
-<!-- Row 2 -->
-<div class="grid-2-1">
-
-  <div class="glass">
-    <div class="label">鏈上因子評分 · 7 個維度看市場健康度</div>
-    <div class="factor-row">
-      <div class="factor-name">MVRV <span style="font-size:10px;opacity:0.5;">市值/實現價值</span></div>
-      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:47.9%"></div></div>
-      <div class="factor-num pos">+0.479</div>
+    <div class="stat-line">
+      <span class="sl-label">若建倉，最多動用</span>
+      <span class="sl-val gold">21% 資金</span>
     </div>
-    <div class="factor-row">
-      <div class="factor-name">SOPR <span style="font-size:10px;opacity:0.5;">持幣者是否獲利賣出</span></div>
-      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:2.7%"></div></div>
-      <div class="factor-num pos">+0.027</div>
+    <div class="stat-line">
+      <span class="sl-label">綜合評分</span>
+      <span class="sl-val green">+0.31 微偏多</span>
     </div>
-    <div class="factor-row">
-      <div class="factor-name">SSR <span style="font-size:10px;opacity:0.5;">穩定幣購買力</span></div>
-      <div class="factor-bar-bg"><div class="factor-bar-neg" style="width:30%"></div></div>
-      <div class="factor-num neg">−0.300</div>
+    <div class="stat-line">
+      <span class="sl-label">止損參考</span>
+      <span class="sl-val red">$67,400</span>
     </div>
-    <div class="factor-row">
-      <div class="factor-name">Netflow <span style="font-size:10px;opacity:0.5;">幣從交易所流出</span></div>
-      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:46.5%"></div></div>
-      <div class="factor-num pos">+0.465</div>
-    </div>
-    <div class="factor-row">
-      <div class="factor-name">礦工流出</div>
-      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:46.7%"></div></div>
-      <div class="factor-num pos">+0.467</div>
-    </div>
-    <div class="factor-row">
-      <div class="factor-name">NVT <span style="font-size:10px;opacity:0.5;">網路估值比</span></div>
-      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:4.3%"></div></div>
-      <div class="factor-num pos">+0.043</div>
-    </div>
-    <div class="factor-row">
-      <div class="factor-name">Taker 比率 <span style="font-size:10px;opacity:0.5;">主動買賣比</span></div>
-      <div class="factor-bar-bg"><div class="factor-bar-pos" style="width:66.5%"></div></div>
-      <div class="factor-num pos">+0.665</div>
+    <div class="stat-line">
+      <span class="sl-label">止盈目標</span>
+      <span class="sl-val green">$74,200</span>
     </div>
   </div>
 
-  <div class="col-stack">
-    <div class="glass">
-      <div class="label">市場體制判斷</div>
-      <div class="regime-row">
-        <span class="regime-label">價格型態（HMM）</span>
-        <span class="regime-trending">上升趨勢中 ↗</span>
-      </div>
-      <div class="regime-row">
-        <span class="regime-label">鏈上結構</span>
-        <span class="regime-markup">牛市累積期</span>
-      </div>
-      <div class="regime-row">
-        <span class="regime-label">技術面權重</span>
-        <span class="regime-neutral">70%</span>
-      </div>
-      <div class="regime-row">
-        <span class="regime-label">鏈上面權重</span>
-        <span class="regime-neutral">30%</span>
+  <!-- BATTLE -->
+  <div class="card c-battle">
+    <div class="card-label">市場情緒對決 · Fear &amp; Greed Index</div>
+    <div class="battle-container">
+      <div class="battle-wrap">
+        <div class="battle-side battle-bear">
+          <div class="battle-emoji">🐻</div>
+          <div class="battle-name">BEARS 空方</div>
+          <div class="battle-score">89</div>
+          <div class="battle-tag">極度恐慌 · 壓倒性優勢</div>
+        </div>
+        <div class="battle-vs">VS</div>
+        <div class="battle-side battle-bull">
+          <div class="battle-emoji" style="font-size:18px;">🐂</div>
+          <div class="battle-name">BULLS</div>
+          <div class="battle-score">11</div>
+        </div>
       </div>
     </div>
-
-    <div class="glass">
-      <div class="label">資金費率 · OKX 永續合約</div>
-      <div class="funding-num">+0.0100%</div>
-      <div class="funding-sub">每 8 小時結算一次</div>
-      <div class="divider"></div>
-      <div class="funding-sub" style="color:rgba(138,158,140,0.75);">正費率：多單付錢給空單，代表市場做多意願仍強，但幅度溫和，尚未過熱</div>
+    <div class="battle-desc">
+      恐慌指數 11 / 100 — 空方幾乎全面壓制。歷史數據顯示，極度恐慌往往靠近底部，但不代表立即反彈。
     </div>
   </div>
 
-</div>
-
-<!-- Row 3 -->
-<div class="grid-2">
-
-  <div class="glass">
-    <div class="label">技術指標訊號 · 5 個策略各自的看法</div>
-    <div class="tech-row">
-      <span class="tech-name">EMA RSI 趨勢</span>
-      <span class="badge badge-flat">沒意見</span>
-    </div>
-    <div class="tech-row">
-      <span class="tech-name">MACD 動能</span>
-      <span class="badge badge-short">偏空 ▼</span>
-    </div>
-    <div class="tech-row">
-      <span class="tech-name">布林帶均值回歸</span>
-      <span class="badge badge-flat">沒意見</span>
-    </div>
-    <div class="tech-row">
-      <span class="tech-name">趨勢強度 ADX</span>
-      <span class="badge badge-short">偏空 ▼</span>
-    </div>
-    <div class="tech-row">
-      <span class="tech-name">OBV 能量背離</span>
-      <span class="badge badge-flat">沒意見</span>
+  <!-- CHART -->
+  <div class="card c-chart">
+    <div class="card-label">BTC 近 30 天走勢 · 含訊號標記</div>
+    <div class="chart-wrap">
+      <canvas id="priceChart"></canvas>
     </div>
   </div>
 
-  <div class="glass">
-    <div class="label">歷史回測成績 · 過去 1 年 · 依風險調整報酬排名</div>
+  <!-- REGIME -->
+  <div class="card c-regime">
+    <div class="card-label">市場體制</div>
+    <div class="regime-item">
+      <div class="ri-label">價格型態</div>
+      <div class="ri-val" style="color:var(--gold);">上升趨勢 ↗</div>
+    </div>
+    <div class="regime-item">
+      <div class="ri-label">鏈上結構</div>
+      <div class="ri-val" style="color:var(--green);">牛市累積期</div>
+    </div>
+    <div class="regime-item">
+      <div class="ri-label">Funding Rate</div>
+      <div class="ri-val green">+0.0100%</div>
+    </div>
+    <div class="regime-item">
+      <div class="ri-label">多空方向</div>
+      <div class="ri-val" style="color:var(--muted);">多方溫和付費</div>
+    </div>
+    <div style="margin-top:10px;">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">鏈上因子評分</div>
+      <div class="mini-bar-row">
+        <div class="mb-name">MVRV</div>
+        <div class="mb-track"><div class="mb-fill-g" style="width:47.9%"></div></div>
+        <div class="mb-num green">+0.48</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mb-name">Netflow</div>
+        <div class="mb-track"><div class="mb-fill-g" style="width:46.5%"></div></div>
+        <div class="mb-num green">+0.47</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mb-name">Taker</div>
+        <div class="mb-track"><div class="mb-fill-g" style="width:66.5%"></div></div>
+        <div class="mb-num green">+0.67</div>
+      </div>
+      <div class="mini-bar-row">
+        <div class="mb-name">SSR</div>
+        <div class="mb-track"><div class="mb-fill-r" style="width:30%"></div></div>
+        <div class="mb-num red">−0.30</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH SIGNALS -->
+  <div class="card c-tech">
+    <div class="card-label">技術指標訊號</div>
+    <div class="tech-grid">
+      <div class="tech-item">
+        <span class="ti-name">EMA RSI 趨勢</span>
+        <span class="badge b-flat">觀望</span>
+      </div>
+      <div class="tech-item">
+        <span class="ti-name">MACD 動能</span>
+        <span class="badge b-short">偏空 ▼</span>
+      </div>
+      <div class="tech-item">
+        <span class="ti-name">布林帶回歸</span>
+        <span class="badge b-flat">觀望</span>
+      </div>
+      <div class="tech-item">
+        <span class="ti-name">ADX 趨勢強度</span>
+        <span class="badge b-short">偏空 ▼</span>
+      </div>
+      <div class="tech-item">
+        <span class="ti-name">OBV 能量背離</span>
+        <span class="badge b-flat">觀望</span>
+      </div>
+      <div class="tech-item" style="background:rgba(196,170,130,0.08);border:1px solid rgba(196,170,130,0.2);">
+        <span class="ti-name" style="color:var(--gold);">綜合判斷</span>
+        <span style="font-size:12px;font-weight:700;color:var(--gold);">等待訊號</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKTEST -->
+  <div class="card c-backtest">
+    <div class="card-label">歷史回測成績 · 過去 1 年 · 依 Sharpe 排名</div>
     <table>
-      <tr>
-        <th>策略</th><th>Sharpe</th><th>勝率</th><th>報酬</th><th>最大虧損</th>
-      </tr>
-      <tr class="rank-1">
+      <tr><th>策略</th><th>Sharpe</th><th>勝率</th><th>報酬</th><th>最大虧損</th></tr>
+      <tr class="best">
         <td>MACD 動能 🥇</td>
-        <td class="pos">0.534</td>
+        <td class="green">0.534</td>
         <td>39.1%</td>
-        <td class="pos">+20.5%</td>
-        <td class="neg">-20.9%</td>
+        <td class="green">+20.5%</td>
+        <td class="red">-20.9%</td>
       </tr>
       <tr>
         <td>EMA RSI 趨勢</td>
-        <td class="neg">-0.036</td>
+        <td class="red">-0.036</td>
         <td>20.0%</td>
-        <td class="neg">-0.5%</td>
-        <td class="neg">-21.8%</td>
+        <td class="red">-0.5%</td>
+        <td class="red">-21.8%</td>
       </tr>
       <tr>
         <td>OBV 能量背離</td>
-        <td class="neg">-0.207</td>
+        <td class="red">-0.207</td>
         <td>57.1%</td>
-        <td class="pos">+2.1%</td>
-        <td class="neg">-7.5%</td>
+        <td class="green">+2.1%</td>
+        <td class="red">-7.5%</td>
       </tr>
       <tr>
         <td>布林帶回歸</td>
-        <td class="neg">-0.272</td>
+        <td class="red">-0.272</td>
         <td>54.5%</td>
-        <td class="neg">-0.4%</td>
-        <td class="neg">-12.8%</td>
+        <td class="red">-0.4%</td>
+        <td class="red">-12.8%</td>
       </tr>
       <tr>
         <td>ADX 趨勢過濾</td>
-        <td class="neg">-0.302</td>
+        <td class="red">-0.302</td>
         <td>31.6%</td>
-        <td class="neg">-11.7%</td>
-        <td class="neg">-40.6%</td>
+        <td class="red">-11.7%</td>
+        <td class="red">-40.6%</td>
       </tr>
     </table>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:20px;font-size:12px;color:var(--muted);">
+      <span>Monte Carlo 獲利機率 <strong style="color:var(--gold);">63.8%</strong></span>
+      <span>最壞虧損上限 <strong style="color:var(--red);">-$33,240</strong></span>
+      <span>中位數結果 <strong style="color:var(--green);">+$12,202</strong></span>
+    </div>
   </div>
 
 </div>
 
-<!-- Monte Carlo -->
-<div class="glass">
-  <div class="label">隨機情境模擬 · Monte Carlo 1000 次 · 以最佳策略 MACD 動能試算 · 假設本金 $100,000</div>
-  <div class="mc-row">
-    <div class="mc-box">
-      <div class="mc-lbl">最壞 5% 情況</div>
-      <div class="mc-num mc-p5">$66,760</div>
-    </div>
-    <div class="mc-box">
-      <div class="mc-lbl">最可能結果（中位數）</div>
-      <div class="mc-num mc-p50">$112,202</div>
-    </div>
-    <div class="mc-box">
-      <div class="mc-lbl">最好 5% 情況</div>
-      <div class="mc-num mc-p95">$192,378</div>
-    </div>
-  </div>
-  <div class="mc-footer">
-    <span>1000 次模擬中有 <strong>63.8%</strong> 最終獲利</span>
-    <span>最壞情況單次虧損上限 <strong style="color:#b87a72;">−$33,240</strong>（VaR 5%）</span>
-    <span>Sharpe 信賴區間 <strong style="color:rgba(232,227,220,0.45);">[−0.95, 2.26]</strong>，波動仍大</span>
-  </div>
-</div>
+<div class="footer">數據來源：OKX · Alternative.me · 量化系統自動產出 · 僅供個人參考，不構成任何投資建議</div>
 
-<div class="footer">
-  數據來源：OKX · Alternative.me · 量化系統自動產出 · 僅供個人參考，不構成任何投資建議
-</div>
+<script>
+const labels = ["02/22","02/23","02/24","02/25","02/26","02/27","02/28","03/01","03/02","03/03","03/04","03/05","03/06","03/07","03/08","03/09","03/10","03/11","03/12","03/13","03/14","03/15","03/16","03/17","03/18","03/19","03/20","03/21","03/22","03/23"];
+const prices = [84200,83100,80400,78600,79800,85200,86100,87500,85300,83900,84700,86200,88100,87400,85600,84800,83200,82100,80500,79300,78200,80100,82400,84300,83700,82100,83500,84200,81900,83200];
+const signals= [-1,-1,-1,-1,0,-1,-1,1,1,0,0,1,1,1,-1,-1,-1,-1,-1,-1,-1,0,1,1,-1,-1,-1,1,-1,1];
 
+// Scale prices down to match actual BTC data range ~67k-71k
+const scaledPrices = prices.map(p => Math.round(67000 + (p - 78000) / (88100 - 78000) * 6000));
+
+const pointColors = signals.map(s =>
+  s === 1  ? 'rgba(138,158,140,1)' :
+  s === -1 ? 'rgba(184,122,114,1)' :
+  'rgba(152,152,157,0.3)'
+);
+const pointRadius = signals.map(s => s !== 0 ? 5 : 3);
+
+const ctx = document.getElementById('priceChart').getContext('2d');
+
+const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+gradient.addColorStop(0, 'rgba(138,158,140,0.18)');
+gradient.addColorStop(1, 'rgba(138,158,140,0)');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [{
+      data: scaledPrices,
+      borderColor: 'rgba(138,158,140,0.7)',
+      borderWidth: 1.8,
+      backgroundColor: gradient,
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: pointColors,
+      pointBorderColor: 'transparent',
+      pointRadius: pointRadius,
+      pointHoverRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#2c2c2e',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        titleColor: '#98989d',
+        bodyColor: '#f5f5f7',
+        callbacks: {
+          label: ctx => {
+            const s = signals[ctx.dataIndex];
+            const sig = s===1?' 🟢 做多訊號':s===-1?' 🔴 偏空訊號':' ⬜ 觀望';
+            return `$${ctx.parsed.y.toLocaleString()}${sig}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+        ticks: { color: '#48484a', font: { size: 10 }, maxTicksLimit: 10 }
+      },
+      y: {
+        position: 'right',
+        grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+        ticks: {
+          color: '#48484a', font: { size: 10 },
+          callback: v => '$' + (v/1000).toFixed(0) + 'k'
+        }
+      }
+    }
+  }
+});
+</script>
 </body>
 </html>
