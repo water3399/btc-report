@@ -135,63 +135,72 @@
   .gold  { color: var(--gold); }
 
   /* ── BATTLE CARD ── */
-  .battle-wrap {
-    display: flex; align-items: stretch; gap: 0;
-    height: calc(100% - 32px);
-    min-height: 120px;
+  .battle-arena {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
   }
   .battle-side {
     flex: 1; display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    border-radius: 12px; padding: 16px 10px;
-    position: relative; overflow: hidden;
-    transition: flex 0.8s cubic-bezier(.4,0,.2,1);
+    align-items: center; text-align: center;
+    border-radius: 14px; padding: 16px 12px;
   }
   .battle-bear {
     background: rgba(184,122,114,0.12);
-    border: 1px solid rgba(184,122,114,0.2);
-    border-radius: 12px 0 0 12px;
-    flex: 89; /* 89% = bear winning at 11/100 */
+    border: 1px solid rgba(184,122,114,0.25);
   }
   .battle-bull {
     background: rgba(138,158,140,0.08);
-    border: 1px solid rgba(138,158,140,0.15);
-    border-radius: 0 12px 12px 0;
-    flex: 11; /* 11% */
+    border: 1px solid rgba(138,158,140,0.18);
   }
-  .battle-emoji { font-size: 32px; line-height: 1; }
+  .battle-emoji { font-size: 34px; line-height: 1; margin-bottom: 6px; }
   .battle-name {
-    font-size: 13px; font-weight: 700; margin-top: 6px;
-    color: var(--red);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--red); margin-bottom: 4px;
   }
-  .battle-bull .battle-name { color: var(--green); font-size: 11px; }
+  .battle-bull .battle-name { color: var(--green); }
   .battle-score {
-    font-size: 28px; font-weight: 800;
-    color: var(--red); letter-spacing: -1px; margin-top: 4px;
+    font-size: 40px; font-weight: 800; letter-spacing: -2px;
+    color: var(--red); line-height: 1;
   }
-  .battle-bull .battle-score { font-size: 14px; color: var(--green); }
+  .battle-bull .battle-score { color: var(--green); font-size: 28px; }
   .battle-tag {
-    font-size: 10px; color: rgba(184,122,114,0.7);
+    font-size: 10px; color: rgba(184,122,114,0.8);
     background: rgba(184,122,114,0.1);
-    padding: 2px 8px; border-radius: 20px; margin-top: 4px;
+    padding: 2px 8px; border-radius: 20px; margin-top: 6px;
     border: 1px solid rgba(184,122,114,0.2);
   }
-  .battle-vs {
-    position: absolute; left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--card);
-    border: 1px solid var(--border);
+  .battle-bull-tag {
+    font-size: 10px; color: rgba(138,158,140,0.7);
+    margin-top: 6px;
+  }
+  .battle-vs-badge {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--card2); border: 1px solid var(--border);
     border-radius: 50%;
-    width: 32px; height: 32px;
     display: flex; align-items: center; justify-content: center;
     font-size: 10px; font-weight: 800; color: var(--muted);
-    z-index: 10; flex-shrink: 0;
   }
-  .battle-container { position: relative; display: flex; flex: 1; align-items: stretch; }
+  /* 血條 */
+  .battle-bar-wrap { margin-bottom: 10px; }
+  .battle-bar-track {
+    height: 8px; border-radius: 4px;
+    background: rgba(138,158,140,0.2);
+    overflow: hidden; position: relative;
+  }
+  .battle-bar-bear {
+    position: absolute; left: 0; top: 0;
+    height: 100%; width: 89%;
+    background: linear-gradient(90deg, var(--red), rgba(184,122,114,0.6));
+    border-radius: 4px;
+  }
+  .battle-bar-labels {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--muted); margin-top: 4px;
+  }
   .battle-desc {
-    font-size: 11px; color: var(--muted);
-    text-align: center; margin-top: 10px;
-    line-height: 1.5;
+    font-size: 11.5px; color: var(--muted);
+    line-height: 1.6;
   }
 
   /* ── CHART CARD ── */
@@ -317,24 +326,32 @@
   <!-- BATTLE -->
   <div class="card c-battle">
     <div class="card-label">市場情緒對決 · Fear &amp; Greed Index</div>
-    <div class="battle-container">
-      <div class="battle-wrap">
-        <div class="battle-side battle-bear">
-          <div class="battle-emoji">🐻</div>
-          <div class="battle-name">BEARS 空方</div>
-          <div class="battle-score">89</div>
-          <div class="battle-tag">極度恐慌 · 壓倒性優勢</div>
-        </div>
-        <div class="battle-vs">VS</div>
-        <div class="battle-side battle-bull">
-          <div class="battle-emoji" style="font-size:18px;">🐂</div>
-          <div class="battle-name">BULLS</div>
-          <div class="battle-score">11</div>
-        </div>
+    <div class="battle-arena">
+      <div class="battle-side battle-bear">
+        <div class="battle-emoji">🐻</div>
+        <div class="battle-name">Bears · 空方</div>
+        <div class="battle-score">89</div>
+        <div class="battle-tag">極度恐慌 · 壓倒性優勢</div>
+      </div>
+      <div class="battle-vs-badge">VS</div>
+      <div class="battle-side battle-bull">
+        <div class="battle-emoji">🐂</div>
+        <div class="battle-name">Bulls · 多方</div>
+        <div class="battle-score">11</div>
+        <div class="battle-bull-tag">弱勢抵抗中</div>
+      </div>
+    </div>
+    <div class="battle-bar-wrap">
+      <div class="battle-bar-track">
+        <div class="battle-bar-bear"></div>
+      </div>
+      <div class="battle-bar-labels">
+        <span style="color:var(--red);">← 空方 89%</span>
+        <span style="color:var(--green);">多方 11% →</span>
       </div>
     </div>
     <div class="battle-desc">
-      恐慌指數 11 / 100 — 空方幾乎全面壓制。歷史數據顯示，極度恐慌往往靠近底部，但不代表立即反彈。
+      恐慌指數 11 / 100 — 空方幾乎全面壓制。歷史上這個位置往往靠近底部，但不代表立即反彈。
     </div>
   </div>
 
