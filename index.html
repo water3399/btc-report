@@ -308,6 +308,120 @@
 
   /* ── FOOTER ── */
   .footer { margin-top: 16px; text-align: center; font-size: 11px; color: #48484a; }
+
+  /* ═══════════════════════════════════════════
+     MOBILE RESPONSIVE  (≤ 640px)
+  ═══════════════════════════════════════════ */
+  @media (max-width: 640px) {
+
+    body { padding: 16px 14px 28px; }
+
+    /* ─ Topbar ─ */
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .topbar-right { width: 100%; justify-content: flex-start; }
+    .topbar h1,
+    .topbar-left div[style] { font-size: 17px !important; }
+
+    /* ─ Bento: single column ─ */
+    .bento {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: none;
+      gap: 10px;
+    }
+
+    /* Row 1: price + action side by side, battle full width */
+    .c-price   { grid-column: 1; grid-row: 1; }
+    .c-action  { grid-column: 2; grid-row: 1; }
+    .c-battle  { grid-column: 1 / 3; grid-row: 2; }
+
+    /* Row 2: chart full width, regime below */
+    .c-chart   { grid-column: 1 / 3; grid-row: 3; }
+    .c-regime  { grid-column: 1 / 3; grid-row: 4; }
+
+    /* Row 3: tech + backtest each full width */
+    .c-tech    { grid-column: 1 / 3; grid-row: 5; }
+    .c-backtest{ grid-column: 1 / 3; grid-row: 6; }
+
+    /* ─ Price card ─ */
+    .price-big { font-size: 26px; letter-spacing: -1px; }
+
+    /* ─ Action card ─ */
+    .action-pill { font-size: 13px; padding: 7px 12px; margin-bottom: 10px; }
+    .stat-line { font-size: 11.5px; }
+
+    /* ─ Battle card ─ */
+    .battle-emoji { font-size: 26px; }
+    .battle-score { font-size: 30px; }
+    .battle-bull .battle-score { font-size: 22px; }
+    .battle-side { padding: 12px 8px; }
+    .battle-vs-badge { width: 28px; height: 28px; font-size: 9px; }
+
+    /* ─ Chart ─ */
+    .chart-wrap { height: 160px; }
+    .analysis-row { font-size: 11.5px; }
+
+    /* ─ Regime: horizontal scroll row on mobile ─ */
+    .c-regime .card-label { margin-bottom: 10px; }
+    .regime-list {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .regime-item {
+      flex-shrink: 0;
+      min-width: 110px;
+      border-bottom: none !important;
+      background: var(--card2);
+      border-radius: 12px;
+      padding: 10px 12px !important;
+    }
+    .ri-val { font-size: 13px; }
+
+    /* ─ Tech grid: single column ─ */
+    .tech-grid { grid-template-columns: 1fr; gap: 6px; }
+    .tech-item { padding: 10px 12px; }
+
+    /* ─ Backtest table: horizontal scroll ─ */
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { font-size: 11.5px; min-width: 400px; }
+    td, th { padding: 7px 6px; }
+
+    /* ─ Card padding ─ */
+    .card { padding: 14px; border-radius: 14px; }
+    .card-label { font-size: 10px; margin-bottom: 10px; }
+  }
+
+  /* ─ Tablet (641–900px): 2-col bento ─ */
+  @media (min-width: 641px) and (max-width: 900px) {
+    .bento {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: none;
+    }
+    .c-price   { grid-column: 1; grid-row: 1; }
+    .c-action  { grid-column: 2; grid-row: 1; }
+    .c-battle  { grid-column: 1 / 3; grid-row: 2; }
+    .c-chart   { grid-column: 1 / 3; grid-row: 3; }
+    .c-regime  { grid-column: 1 / 3; grid-row: 4; }
+    .c-tech    { grid-column: 1; grid-row: 5; }
+    .c-backtest{ grid-column: 2; grid-row: 5; }
+    .regime-list {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .regime-item {
+      flex: 1; min-width: 120px;
+      background: var(--card2); border-radius: 12px;
+      padding: 10px 14px !important;
+      border-bottom: none !important;
+    }
+    .table-scroll { overflow-x: auto; }
+  }
 </style>
 </head>
 <body>
@@ -424,6 +538,7 @@
   <!-- REGIME -->
   <div class="card c-regime">
     <div class="card-label">市場體制</div>
+    <div class="regime-list">
     <div class="regime-item">
       <div class="ri-label">價格型態</div>
       <div class="ri-val" style="color:var(--gold);">上升趨勢 ↗</div>
@@ -439,6 +554,7 @@
     <div class="regime-item">
       <div class="ri-label">多空方向</div>
       <div class="ri-val" style="color:var(--muted);">多方溫和付費</div>
+    </div>
     </div>
     <div style="margin-top:10px;">
       <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">鏈上因子評分</div>
@@ -499,6 +615,7 @@
   <!-- BACKTEST -->
   <div class="card c-backtest">
     <div class="card-label">歷史回測成績 · 過去 1 年 · 依 Sharpe 排名</div>
+    <div class="table-scroll">
     <table>
       <tr><th>策略</th><th>Sharpe</th><th>勝率</th><th>報酬</th><th>最大虧損</th></tr>
       <tr class="best">
@@ -537,6 +654,7 @@
         <td class="red">-40.6%</td>
       </tr>
     </table>
+    </div>
     <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:20px;font-size:12px;color:var(--muted);">
       <span>Monte Carlo 獲利機率 <strong style="color:var(--gold);">63.8%</strong></span>
       <span>最壞虧損上限 <strong style="color:var(--red);">-$33,240</strong></span>
