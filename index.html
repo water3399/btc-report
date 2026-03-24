@@ -14,8 +14,6 @@
 <meta property="og:url" content="https://water3399.github.io/btc-report/"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="BTC Daily Report"/>
-
-<!-- Twitter / X Card -->
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="BTC Daily Report · 量化訊號儀表板"/>
 <meta name="twitter:description" content="今日 BTC 技術指標、市場體制、恐懼貪婪指數、Funding Rate 一覽。System A 量化策略即時輸出。"/>
@@ -38,410 +36,163 @@
     --red-bd:   rgba(184,122,114,0.3);
     --gold:     #c4aa82;
   }
-
   * { margin:0; padding:0; box-sizing:border-box; }
-
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: var(--bg); color: var(--text);
     font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    padding: 24px 28px 36px;
+    min-height: 100vh; padding: 24px 28px 36px;
   }
-
-  /* ── TOP BAR ── */
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 22px;
-  }
-  .topbar-left { display: flex; align-items: center; gap: 14px; }
-  .logo {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, var(--green), var(--gold));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-  .topbar h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  .topbar-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
-  .topbar-right { display: flex; align-items: center; gap: 10px; }
-  .tag {
-    padding: 5px 12px; border-radius: 20px;
-    font-size: 12px; font-weight: 600;
-    background: var(--card); color: var(--muted);
-    border: 1px solid var(--border);
-  }
-  .tag-date { color: var(--text); }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .card-label {
-    font-size: 11px; font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-bottom: 12px;
-  }
-
-  /* ── BENTO GRID ── */
-  .bento {
-    display: grid;
-    grid-template-columns: 220px 1fr 1fr 200px;
-    grid-template-rows: auto auto auto;
-    gap: 12px;
-  }
-
-  .c-price    { grid-column: 1; grid-row: 1; }
-  .c-action   { grid-column: 2; grid-row: 1; }
-  .c-battle   { grid-column: 3 / 5; grid-row: 1; }
-  .c-chart    { grid-column: 1 / 4; grid-row: 2; }
-  .c-regime   { grid-column: 4; grid-row: 2; }
-  .c-tech     { grid-column: 1 / 3; grid-row: 3; }
-  .c-backtest { grid-column: 3 / 5; grid-row: 3; }
-
-  /* ── PRICE CARD ── */
-  .price-big {
-    font-size: 38px; font-weight: 800;
-    letter-spacing: -2px; line-height: 1;
-    color: var(--text);
-  }
-  .price-sub { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .price-change {
-    display: inline-flex; align-items: center; gap: 4px;
-    margin-top: 10px; padding: 4px 10px;
-    border-radius: 20px; font-size: 12px; font-weight: 600;
-    background: var(--green-bg); color: var(--green);
-    border: 1px solid var(--green-bd);
-  }
-
-  /* ── ACTION CARD ── */
-  .action-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 16px; border-radius: 100px;
-    font-size: 16px; font-weight: 700;
-    background: var(--card2); color: var(--muted);
-    border: 1px solid var(--border);
-    margin-bottom: 14px;
-  }
-  .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-  .pulse-green { background: var(--green); box-shadow: 0 0 0 3px rgba(138,158,140,0.2); animation: pulse 2s infinite; }
-  .pulse-red { background: var(--red); box-shadow: 0 0 0 3px rgba(184,122,114,0.2); animation: pulse 2s infinite; }
+  .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+  .topbar-left { display:flex; align-items:center; gap:14px; }
+  .logo { width:36px; height:36px; background:linear-gradient(135deg,var(--green),var(--gold)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .topbar h1 { font-size:20px; font-weight:700; letter-spacing:-0.3px; }
+  .topbar-sub { font-size:12px; color:var(--muted); margin-top:1px; }
+  .topbar-right { display:flex; align-items:center; gap:10px; }
+  .tag { padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; background:var(--card); color:var(--muted); border:1px solid var(--border); }
+  .tag-date { color:var(--text); }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:20px; position:relative; overflow:hidden; }
+  .card-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:12px; }
+  .bento { display:grid; grid-template-columns:220px 1fr 1fr 200px; grid-template-rows:auto auto auto; gap:12px; }
+  .c-price    { grid-column:1; grid-row:1; }
+  .c-action   { grid-column:2; grid-row:1; }
+  .c-battle   { grid-column:3/5; grid-row:1; }
+  .c-chart    { grid-column:1/4; grid-row:2; }
+  .c-regime   { grid-column:4; grid-row:2; }
+  .c-tech     { grid-column:1/3; grid-row:3; }
+  .c-backtest { grid-column:3/5; grid-row:3; }
+  .price-big { font-size:38px; font-weight:800; letter-spacing:-2px; line-height:1; color:var(--text); }
+  .price-sub { font-size:12px; color:var(--muted); margin-top:8px; }
+  .price-change { display:inline-flex; align-items:center; gap:4px; margin-top:10px; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bd); }
+  .action-pill { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:100px; font-size:16px; font-weight:700; background:var(--card2); color:var(--muted); border:1px solid var(--border); margin-bottom:14px; }
+  .pulse { width:8px; height:8px; border-radius:50%; background:var(--muted); }
+  .pulse-green { background:var(--green); box-shadow:0 0 0 3px rgba(138,158,140,0.2); animation:pulse 2s infinite; }
+  .pulse-red   { background:var(--red);   box-shadow:0 0 0 3px rgba(184,122,114,0.2); animation:pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .stat-line { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; }
+  .stat-line:last-child { border-bottom:none; }
+  .sl-label { color:var(--muted); }
+  .sl-val { font-weight:600; }
+  .green { color:var(--green); }
+  .red   { color:var(--red); }
+  .gold  { color:var(--gold); }
+  .battle-arena { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .battle-side { flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; border-radius:14px; padding:16px 12px; }
+  .battle-bear { background:rgba(184,122,114,0.12); border:1px solid rgba(184,122,114,0.25); }
+  .battle-bull { background:rgba(138,158,140,0.08); border:1px solid rgba(138,158,140,0.18); }
+  .battle-emoji { font-size:34px; line-height:1; margin-bottom:6px; }
+  .battle-name { font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--red); margin-bottom:4px; }
+  .battle-bull .battle-name { color:var(--green); }
+  .battle-score { font-size:40px; font-weight:800; letter-spacing:-2px; color:var(--red); line-height:1; }
+  .battle-bull .battle-score { color:var(--green); font-size:28px; }
+  .battle-tag { font-size:10px; color:rgba(184,122,114,0.8); background:rgba(184,122,114,0.1); padding:2px 8px; border-radius:20px; margin-top:6px; border:1px solid rgba(184,122,114,0.2); }
+  .battle-bull-tag { font-size:10px; color:rgba(138,158,140,0.7); margin-top:6px; }
+  .battle-vs-badge { width:36px; height:36px; flex-shrink:0; background:var(--card2); border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; color:var(--muted); }
+  .battle-bar-wrap { margin-bottom:10px; }
+  .battle-bar-track { height:8px; border-radius:4px; background:rgba(138,158,140,0.2); overflow:hidden; position:relative; }
+  .battle-bar-bear { position:absolute; left:0; top:0; height:100%; width:11%; background:linear-gradient(90deg,var(--red),rgba(184,122,114,0.6)); border-radius:4px; }
+  .battle-bar-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:4px; }
+  .battle-desc { font-size:11.5px; color:var(--muted); line-height:1.6; }
+  .chart-wrap { height:180px; position:relative; }
+  .analysis-block { margin-top:16px; padding-top:14px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:8px; }
+  .analysis-row { display:flex; align-items:flex-start; gap:10px; font-size:12.5px; line-height:1.5; }
+  .analysis-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+  .analysis-dot.warn  { background:var(--red);  box-shadow:0 0 6px var(--red); }
+  .analysis-dot.watch { background:var(--gold); box-shadow:0 0 6px var(--gold); }
+  .analysis-dot.note  { background:var(--muted); }
+  .analysis-text { color:#ccccd0; }
+  .analysis-text em { color:var(--text); font-style:normal; font-weight:600; }
+  .regime-item { display:flex; flex-direction:column; gap:3px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .regime-item:last-child { border-bottom:none; }
+  .ri-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+  .ri-val { font-size:14px; font-weight:700; }
+  .tech-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px; }
+  .tech-item { background:var(--card2); border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; }
+  .ti-name { font-size:12px; color:var(--muted); }
+  .badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+  .b-flat  { background:rgba(152,152,157,0.15); color:var(--muted); }
+  .b-short { background:var(--red-bg); color:var(--red); border:1px solid var(--red-bd); }
+  .b-long  { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bd); }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:4px; }
+  th { text-align:left; color:var(--muted); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; padding:4px 8px 8px; border-bottom:1px solid rgba(255,255,255,0.07); }
+  td { padding:8px 8px; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(245,245,247,0.7); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,0.02); color:var(--text); }
+  tr.best td { color:var(--text); }
+  tr.best td:first-child { font-weight:700; }
+  .mini-bar-row { display:flex; align-items:center; gap:8px; padding:5px 0; font-size:12px; border-bottom:1px solid rgba(255,255,255,0.04); }
+  .mini-bar-row:last-child { border-bottom:none; }
+  .mb-name { width:100px; color:var(--muted); font-size:11px; flex-shrink:0; }
+  .mb-track { flex:1; height:4px; background:rgba(255,255,255,0.07); border-radius:2px; overflow:hidden; }
+  .mb-fill-g { height:100%; background:var(--green); border-radius:2px; }
+  .mb-fill-r { height:100%; background:var(--red); border-radius:2px; }
+  .mb-num { width:60px; text-align:right; font-size:11px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .footer { margin-top:16px; text-align:center; font-size:11px; color:#48484a; }
 
-  .stat-line {
-    display: flex; justify-content: space-between;
-    align-items: center; padding: 7px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 13px;
+  @media (max-width:640px) {
+    body { padding:16px 14px 28px; }
+    .topbar { flex-direction:column; align-items:flex-start; gap:10px; margin-bottom:16px; }
+    .topbar-right { width:100%; justify-content:flex-start; }
+    .bento { grid-template-columns:1fr 1fr; grid-template-rows:none; gap:10px; }
+    .c-price   { grid-column:1; grid-row:1; }
+    .c-action  { grid-column:2; grid-row:1; }
+    .c-battle  { grid-column:1/3; grid-row:2; }
+    .c-chart   { grid-column:1/3; grid-row:3; }
+    .c-regime  { grid-column:1/3; grid-row:4; }
+    .c-tech    { grid-column:1/3; grid-row:5; }
+    .c-backtest{ grid-column:1/3; grid-row:6; }
+    .price-big { font-size:26px; letter-spacing:-1px; }
+    .action-pill { font-size:13px; padding:7px 12px; margin-bottom:10px; }
+    .stat-line { font-size:11.5px; }
+    .battle-emoji { font-size:26px; }
+    .battle-score { font-size:30px; }
+    .battle-bull .battle-score { font-size:22px; }
+    .battle-side { padding:12px 8px; }
+    .battle-vs-badge { width:28px; height:28px; font-size:9px; }
+    .chart-wrap { height:160px; }
+    .analysis-row { font-size:11.5px; }
+    .regime-list { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; }
+    .regime-item { flex-shrink:0; min-width:110px; border-bottom:none !important; background:var(--card2); border-radius:12px; padding:10px 12px !important; }
+    .ri-val { font-size:13px; }
+    .tech-grid { grid-template-columns:1fr; gap:6px; }
+    .tech-item { padding:10px 12px; }
+    .table-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    table { font-size:11.5px; min-width:400px; }
+    td, th { padding:7px 6px; }
+    .card { padding:14px; border-radius:14px; }
+    .card-label { font-size:10px; margin-bottom:10px; }
   }
-  .stat-line:last-child { border-bottom: none; }
-  .sl-label { color: var(--muted); }
-  .sl-val { font-weight: 600; }
-  .green { color: var(--green); }
-  .red   { color: var(--red); }
-  .gold  { color: var(--gold); }
-
-  /* ── BATTLE CARD ── */
-  .battle-arena {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 14px;
-  }
-  .battle-side {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; text-align: center;
-    border-radius: 14px; padding: 16px 12px;
-  }
-  .battle-bear {
-    background: rgba(184,122,114,0.12);
-    border: 1px solid rgba(184,122,114,0.25);
-  }
-  .battle-bull {
-    background: rgba(138,158,140,0.08);
-    border: 1px solid rgba(138,158,140,0.18);
-  }
-  .battle-emoji { font-size: 34px; line-height: 1; margin-bottom: 6px; }
-  .battle-name {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--red); margin-bottom: 4px;
-  }
-  .battle-bull .battle-name { color: var(--green); }
-  .battle-score {
-    font-size: 40px; font-weight: 800; letter-spacing: -2px;
-    color: var(--red); line-height: 1;
-  }
-  .battle-bull .battle-score { color: var(--green); font-size: 28px; }
-  .battle-tag {
-    font-size: 10px; color: rgba(184,122,114,0.8);
-    background: rgba(184,122,114,0.1);
-    padding: 2px 8px; border-radius: 20px; margin-top: 6px;
-    border: 1px solid rgba(184,122,114,0.2);
-  }
-  .battle-bull-tag {
-    font-size: 10px; color: rgba(138,158,140,0.7);
-    margin-top: 6px;
-  }
-  .battle-vs-badge {
-    width: 36px; height: 36px; flex-shrink: 0;
-    background: var(--card2); border: 1px solid var(--border);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 800; color: var(--muted);
-  }
-  /* 血條 */
-  .battle-bar-wrap { margin-bottom: 10px; }
-  .battle-bar-track {
-    height: 8px; border-radius: 4px;
-    background: rgba(138,158,140,0.2);
-    overflow: hidden; position: relative;
-  }
-  .battle-bar-bear {
-    position: absolute; left: 0; top: 0;
-    height: 100%; width: 89%;
-    background: linear-gradient(90deg, var(--red), rgba(184,122,114,0.6));
-    border-radius: 4px;
-  }
-  .battle-bar-labels {
-    display: flex; justify-content: space-between;
-    font-size: 10px; color: var(--muted); margin-top: 4px;
-  }
-  .battle-desc {
-    font-size: 11.5px; color: var(--muted);
-    line-height: 1.6;
-  }
-
-  /* ── CHART CARD ── */
-  .chart-wrap { height: 180px; position: relative; }
-
-  .analysis-block {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .analysis-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 12.5px;
-    line-height: 1.5;
-  }
-  .analysis-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 5px;
-  }
-  .analysis-dot.warn  { background: var(--red); box-shadow: 0 0 6px var(--red); }
-  .analysis-dot.watch { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
-  .analysis-dot.note  { background: var(--muted); }
-  .analysis-text { color: #ccccd0; }
-  .analysis-text em { color: var(--text); font-style: normal; font-weight: 600; }
-
-  /* ── REGIME CARD ── */
-  .regime-item {
-    display: flex; flex-direction: column;
-    gap: 3px; padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .regime-item:last-child { border-bottom: none; }
-  .ri-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-  .ri-val { font-size: 14px; font-weight: 700; }
-
-  /* ── TECH SIGNALS ── */
-  .tech-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 8px; margin-top: 4px;
-  }
-  .tech-item {
-    background: var(--card2); border-radius: 12px;
-    padding: 12px 14px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .ti-name { font-size: 12px; color: var(--muted); }
-  .badge {
-    padding: 3px 10px; border-radius: 20px;
-    font-size: 11px; font-weight: 700;
-  }
-  .b-flat  { background: rgba(152,152,157,0.15); color: var(--muted); }
-  .b-short { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-bd); }
-  .b-long  { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
-
-  /* ── BACKTEST TABLE ── */
-  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
-  th {
-    text-align: left; color: var(--muted);
-    font-size: 10px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.07em;
-    padding: 4px 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  td { padding: 8px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(245,245,247,0.7); }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
-  tr.best td { color: var(--text); }
-  tr.best td:first-child { font-weight: 700; }
-
-  /* ── MINI BARS (factor) ── */
-  .mini-bar-row {
-    display: flex; align-items: center; gap: 8px;
-    padding: 5px 0; font-size: 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .mini-bar-row:last-child { border-bottom: none; }
-  .mb-name { width: 90px; color: var(--muted); font-size: 11px; flex-shrink: 0; }
-  .mb-track { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
-  .mb-fill-g { height: 100%; background: var(--green); border-radius: 2px; }
-  .mb-fill-r { height: 100%; background: var(--red); border-radius: 2px; }
-  .mb-num { width: 44px; text-align: right; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
-
-  /* ── FOOTER ── */
-  .footer { margin-top: 16px; text-align: center; font-size: 11px; color: #48484a; }
-
-  /* ═══════════════════════════════════════════
-     MOBILE RESPONSIVE  (≤ 640px)
-  ═══════════════════════════════════════════ */
-  @media (max-width: 640px) {
-
-    body { padding: 16px 14px 28px; }
-
-    /* ─ Topbar ─ */
-    .topbar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .topbar-right { width: 100%; justify-content: flex-start; }
-    .topbar h1,
-    .topbar-left div[style] { font-size: 17px !important; }
-
-    /* ─ Bento: single column ─ */
-    .bento {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: none;
-      gap: 10px;
-    }
-
-    /* Row 1: price + action side by side, battle full width */
-    .c-price   { grid-column: 1; grid-row: 1; }
-    .c-action  { grid-column: 2; grid-row: 1; }
-    .c-battle  { grid-column: 1 / 3; grid-row: 2; }
-
-    /* Row 2: chart full width, regime below */
-    .c-chart   { grid-column: 1 / 3; grid-row: 3; }
-    .c-regime  { grid-column: 1 / 3; grid-row: 4; }
-
-    /* Row 3: tech + backtest each full width */
-    .c-tech    { grid-column: 1 / 3; grid-row: 5; }
-    .c-backtest{ grid-column: 1 / 3; grid-row: 6; }
-
-    /* ─ Price card ─ */
-    .price-big { font-size: 26px; letter-spacing: -1px; }
-
-    /* ─ Action card ─ */
-    .action-pill { font-size: 13px; padding: 7px 12px; margin-bottom: 10px; }
-    .stat-line { font-size: 11.5px; }
-
-    /* ─ Battle card ─ */
-    .battle-emoji { font-size: 26px; }
-    .battle-score { font-size: 30px; }
-    .battle-bull .battle-score { font-size: 22px; }
-    .battle-side { padding: 12px 8px; }
-    .battle-vs-badge { width: 28px; height: 28px; font-size: 9px; }
-
-    /* ─ Chart ─ */
-    .chart-wrap { height: 160px; }
-    .analysis-row { font-size: 11.5px; }
-
-    /* ─ Regime: horizontal scroll row on mobile ─ */
-    .c-regime .card-label { margin-bottom: 10px; }
-    .regime-list {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .regime-item {
-      flex-shrink: 0;
-      min-width: 110px;
-      border-bottom: none !important;
-      background: var(--card2);
-      border-radius: 12px;
-      padding: 10px 12px !important;
-    }
-    .ri-val { font-size: 13px; }
-
-    /* ─ Tech grid: single column ─ */
-    .tech-grid { grid-template-columns: 1fr; gap: 6px; }
-    .tech-item { padding: 10px 12px; }
-
-    /* ─ Backtest table: horizontal scroll ─ */
-    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { font-size: 11.5px; min-width: 400px; }
-    td, th { padding: 7px 6px; }
-
-    /* ─ Card padding ─ */
-    .card { padding: 14px; border-radius: 14px; }
-    .card-label { font-size: 10px; margin-bottom: 10px; }
-  }
-
-  /* ─ Tablet (641–900px): 2-col bento ─ */
-  @media (min-width: 641px) and (max-width: 900px) {
-    .bento {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: none;
-    }
-    .c-price   { grid-column: 1; grid-row: 1; }
-    .c-action  { grid-column: 2; grid-row: 1; }
-    .c-battle  { grid-column: 1 / 3; grid-row: 2; }
-    .c-chart   { grid-column: 1 / 3; grid-row: 3; }
-    .c-regime  { grid-column: 1 / 3; grid-row: 4; }
-    .c-tech    { grid-column: 1; grid-row: 5; }
-    .c-backtest{ grid-column: 2; grid-row: 5; }
-    .regime-list {
-      display: flex; gap: 10px; flex-wrap: wrap;
-    }
-    .regime-item {
-      flex: 1; min-width: 120px;
-      background: var(--card2); border-radius: 12px;
-      padding: 10px 14px !important;
-      border-bottom: none !important;
-    }
-    .table-scroll { overflow-x: auto; }
+  @media (min-width:641px) and (max-width:900px) {
+    .bento { grid-template-columns:1fr 1fr; grid-template-rows:none; }
+    .c-price   { grid-column:1; grid-row:1; }
+    .c-action  { grid-column:2; grid-row:1; }
+    .c-battle  { grid-column:1/3; grid-row:2; }
+    .c-chart   { grid-column:1/3; grid-row:3; }
+    .c-regime  { grid-column:1/3; grid-row:4; }
+    .c-tech    { grid-column:1; grid-row:5; }
+    .c-backtest{ grid-column:2; grid-row:5; }
+    .regime-list { display:flex; gap:10px; flex-wrap:wrap; }
+    .regime-item { flex:1; min-width:120px; background:var(--card2); border-radius:12px; padding:10px 14px !important; border-bottom:none !important; }
+    .table-scroll { overflow-x:auto; }
   }
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-left">
     <div class="logo">₿</div>
     <div>
-      <div class="topbar h1" style="font-size:20px;font-weight:700;">BTC 每日操作參考</div>
+      <div style="font-size:20px;font-weight:700;">BTC 每日操作參考</div>
       <div class="topbar-sub">量化系統自動報告 · 技術面主導</div>
     </div>
   </div>
   <div class="topbar-right">
-    <span class="tag tag-date">2026-03-23 &nbsp;21:00</span>
+    <span class="tag tag-date">2026-03-23 &nbsp;22:37</span>
     <span class="tag">Los Angeles</span>
   </div>
 </div>
 
-<!-- BENTO GRID -->
 <div class="bento">
 
   <!-- PRICE -->
@@ -449,14 +200,14 @@
     <div class="card-label">BTC 現價</div>
     <div class="price-big">$70,642</div>
     <div class="price-sub">OKX · BTC-USDT</div>
-    <div class="price-change">↑ 上升趨勢區間</div>
+    <div class="price-change">↑ 上升趨勢 ↗</div>
   </div>
 
   <!-- ACTION -->
   <div class="card c-action">
     <div class="card-label">今日建議動作</div>
     <div class="action-pill">
-      <span class="pulse"></span>
+      <span class="pulse "></span>
       觀望，暫不動
     </div>
     <div class="stat-line">
@@ -471,45 +222,35 @@
       <span class="sl-label">綜合評分</span>
       <span class="sl-val green">+0.31 微偏多</span>
     </div>
-    <div class="stat-line">
-      <span class="sl-label">止損參考</span>
-      <span class="sl-val red">$67,400</span>
-    </div>
-    <div class="stat-line">
-      <span class="sl-label">止盈目標</span>
-      <span class="sl-val green">$74,200</span>
-    </div>
   </div>
 
   <!-- BATTLE -->
   <div class="card c-battle">
-    <div class="card-label">市場情緒對決 · Fear &amp; Greed Index</div>
+    <div class="card-label">市場情緒 · 恐懼 &amp; 貪婪指數</div>
     <div class="battle-arena">
       <div class="battle-side battle-bear">
         <div class="battle-emoji">🐻</div>
         <div class="battle-name">Bears · 空方</div>
-        <div class="battle-score">89</div>
+        <div class="battle-score">11</div>
         <div class="battle-tag">極度恐慌 · 壓倒性優勢</div>
       </div>
       <div class="battle-vs-badge">VS</div>
       <div class="battle-side battle-bull">
         <div class="battle-emoji">🐂</div>
         <div class="battle-name">Bulls · 多方</div>
-        <div class="battle-score">11</div>
+        <div class="battle-score">89</div>
         <div class="battle-bull-tag">弱勢抵抗中</div>
       </div>
     </div>
     <div class="battle-bar-wrap">
-      <div class="battle-bar-track">
-        <div class="battle-bar-bear"></div>
-      </div>
+      <div class="battle-bar-track"><div class="battle-bar-bear"></div></div>
       <div class="battle-bar-labels">
-        <span style="color:var(--red);">← 空方 89%</span>
-        <span style="color:var(--green);">多方 11% →</span>
+        <span>🐻 空方 11%</span>
+        <span>多方 89% 🐂</span>
       </div>
     </div>
     <div class="battle-desc">
-      恐慌指數 11 / 100 — 空方幾乎全面壓制。歷史上這個位置往往靠近底部，但不代表立即反彈。
+      恐懼貪婪指數反映市場整體情緒。極度恐慌時往往是中長線布局的觀察窗口，但需配合鏈上數據和價格止跌訊號確認。
     </div>
   </div>
 
@@ -522,15 +263,15 @@
     <div class="analysis-block">
       <div class="analysis-row">
         <div class="analysis-dot warn"></div>
-        <div class="analysis-text">技術面偏空（MACD 動能弱、ADX 趨勢不足），<em>短線不追多</em>。但這與鏈上出現明顯背離——短線情緒差，不代表結構壞。</div>
+        <div class="analysis-text">技術面偏空（2 個指標下行），<em>短線不追多</em>。等待動能止跌後的方向確認更安全。</div>
       </div>
       <div class="analysis-row">
         <div class="analysis-dot watch"></div>
-        <div class="analysis-text">鏈上數據偏健康：<em>MVRV 1.2x</em>（遠離泡沫區）、<em>NUPL 0.19</em>（歷史上的中長線買點附近）、礦工流出僅 201 BTC（惜售不拋）。結構沒問題。</div>
+        <div class="analysis-text">鏈上數據偏健康：<em>MVRV 1.2x</em>（遠離泡沫區）、<em>NUPL 0.19</em>（希望 / 恐懼區（歷史中長線買點附近））、礦工流出極低，惜售不拋。結構沒問題。</div>
       </div>
       <div class="analysis-row">
         <div class="analysis-dot note"></div>
-        <div class="analysis-text">市價 $70.1K 比 Realized Price $54.3K 高 <em>29%</em>——整體持倉仍獲利，但溢價不極端（牛市高峰通常超過 200%）。現在是回調修正，不是結構崩潰。</div>
+        <div class="analysis-text">市價 $70,642 比 Realized Price $54,300 高 <em>30.1%</em>——溢價 30.1% 不極端（牛市高峰通常超過 200%），現在是回調修正，不是結構崩潰。</div>
       </div>
     </div>
   </div>
@@ -545,7 +286,7 @@
     </div>
     <div class="regime-item">
       <div class="ri-label">鏈上結構</div>
-      <div class="ri-val" style="color:var(--green);">希望 / 恐懼區</div>
+      <div class="ri-val" style="color:var(--green);">牛市累積期</div>
     </div>
     <div class="regime-item">
       <div class="ri-label">Funding Rate</div>
@@ -568,22 +309,22 @@
       </div>
       <div class="mini-bar-row">
         <div class="mb-name">NUPL</div>
-        <div class="mb-track"><div class="mb-fill-g" style="width:59%"></div></div>
+        <div class="mb-track"><div class="mb-fill-g" style="width:60%"></div></div>
         <div class="mb-num green">0.19</div>
       </div>
       <div class="mini-bar-row">
         <div class="mb-name">Exch. Netflow</div>
-        <div class="mb-track"><div class="mb-fill-r" style="width:22%"></div></div>
+        <div class="mb-track"><div class="mb-fill-r" style="width:5%"></div></div>
         <div class="mb-num red">+87 BTC</div>
       </div>
       <div class="mini-bar-row">
         <div class="mb-name">Miner Outflow</div>
-        <div class="mb-track"><div class="mb-fill-g" style="width:75%"></div></div>
+        <div class="mb-track"><div class="mb-fill-g" style="width:85%"></div></div>
         <div class="mb-num green">201 BTC</div>
       </div>
       <div class="mini-bar-row">
         <div class="mb-name">Realized Price</div>
-        <div class="mb-track"><div class="mb-fill-g" style="width:29%"></div></div>
+        <div class="mb-track"><div class="mb-fill-g" style="width:10%"></div></div>
         <div class="mb-num gold">$54.3K</div>
       </div>
     </div>
@@ -626,61 +367,45 @@
     <div class="table-scroll">
     <table>
       <tr><th>策略</th><th>Sharpe</th><th>勝率</th><th>報酬</th><th>最大虧損</th></tr>
+      
       <tr class="best">
-        <td>MACD 動能 🥇</td>
-        <td class="green">0.534</td>
-        <td>39.1%</td>
-        <td class="green">+20.5%</td>
-        <td class="red">-20.9%</td>
+        <td>MACD 動能 🥇</td><td class="green">0.534</td>
+        <td>39.1%</td><td class="green">+20.5%</td><td class="red">-18.3%</td>
       </tr>
       <tr>
-        <td>EMA RSI 趨勢</td>
-        <td class="red">-0.036</td>
-        <td>20.0%</td>
-        <td class="red">-0.5%</td>
-        <td class="red">-21.8%</td>
+        <td>EMA RSI 趨勢</td><td class="green">0.412</td>
+        <td>44.7%</td><td class="green">+14.2%</td><td class="red">-15.1%</td>
       </tr>
       <tr>
-        <td>OBV 能量背離</td>
-        <td class="red">-0.207</td>
-        <td>57.1%</td>
-        <td class="green">+2.1%</td>
-        <td class="red">-7.5%</td>
+        <td>OBV 能量背離</td><td class="green">0.187</td>
+        <td>41.2%</td><td class="green">+8.1%</td><td class="red">-9.4%</td>
       </tr>
       <tr>
-        <td>布林帶回歸</td>
-        <td class="red">-0.272</td>
-        <td>54.5%</td>
-        <td class="red">-0.4%</td>
-        <td class="red">-12.8%</td>
+        <td>布林帶回歸</td><td class="red">-0.272</td>
+        <td>54.5%</td><td class="red">-0.4%</td><td class="red">-12.8%</td>
       </tr>
       <tr>
-        <td>ADX 趨勢過濾</td>
-        <td class="red">-0.302</td>
-        <td>31.6%</td>
-        <td class="red">-11.7%</td>
-        <td class="red">-40.6%</td>
+        <td>ADX 趨勢過濾</td><td class="red">-0.302</td>
+        <td>31.6%</td><td class="red">-11.7%</td><td class="red">-40.6%</td>
       </tr>
     </table>
     </div>
-    <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:20px;font-size:12px;color:var(--muted);">
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);">
       <span>Monte Carlo 獲利機率 <strong style="color:var(--gold);">63.8%</strong></span>
       <span>最壞虧損上限 <strong style="color:var(--red);">-$33,240</strong></span>
-      <span>中位數結果 <strong style="color:var(--green);">+$12,202</strong></span>
     </div>
   </div>
 
 </div>
 
-<div class="footer">數據來源：OKX · Alternative.me · 量化系統自動產出 · 僅供個人參考，不構成任何投資建議</div>
+<div class="footer">
+  BTC Daily Report · System A 量化策略 · 技術面分析 · 僅供參考，不構成投資建議
+</div>
 
 <script>
-const labels = ["02/22","02/23","02/24","02/25","02/26","02/27","02/28","03/01","03/02","03/03","03/04","03/05","03/06","03/07","03/08","03/09","03/10","03/11","03/12","03/13","03/14","03/15","03/16","03/17","03/18","03/19","03/20","03/21","03/22","03/23"];
-const prices = [84200,83100,80400,78600,79800,85200,86100,87500,85300,83900,84700,86200,88100,87400,85600,84800,83200,82100,80500,79300,78200,80100,82400,84300,83700,82100,83500,84200,81900,83200];
-const signals= [-1,-1,-1,-1,0,-1,-1,1,1,0,0,1,1,1,-1,-1,-1,-1,-1,-1,-1,0,1,1,-1,-1,-1,1,-1,1];
-
-// Scale prices down to match actual BTC data range ~67k-71k
-const scaledPrices = prices.map(p => Math.round(67000 + (p - 78000) / (88100 - 78000) * 6000));
+const labels  = ["03/09", "03/09", "03/10", "03/10", "03/11", "03/11", "03/12", "03/12", "03/13", "03/13", "03/14", "03/14", "03/15", "03/15", "03/16", "03/16", "03/17", "03/17", "03/18", "03/18", "03/19", "03/19", "03/20", "03/20", "03/21", "03/21", "03/22", "03/22", "03/23", "03/23"];
+const prices  = [68441.0, 71344.0, 69953.0, 70236.0, 70205.0, 70327.0, 70554.0, 71832.0, 70936.0, 70579.0, 71225.0, 71478.0, 72822.0, 73269.0, 74883.0, 73917.0, 73925.0, 71468.0, 71244.0, 69410.0, 69920.0, 69871.0, 70505.0, 70630.0, 68910.0, 68844.0, 67844.0, 70133.0, 70897.0, 70642.0];
+const signals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 const pointColors = signals.map(s =>
   s === 1  ? 'rgba(138,158,140,1)' :
@@ -690,7 +415,6 @@ const pointColors = signals.map(s =>
 const pointRadius = signals.map(s => s !== 0 ? 5 : 3);
 
 const ctx = document.getElementById('priceChart').getContext('2d');
-
 const gradient = ctx.createLinearGradient(0, 0, 0, 180);
 gradient.addColorStop(0, 'rgba(138,158,140,0.18)');
 gradient.addColorStop(1, 'rgba(138,158,140,0)');
@@ -700,29 +424,29 @@ new Chart(ctx, {
   data: {
     labels,
     datasets: [{
-      data: scaledPrices,
-      borderColor: 'rgba(138,158,140,0.7)',
-      borderWidth: 1.8,
+      data: prices,
+      borderColor: 'rgba(138,158,140,0.9)',
+      borderWidth: 2,
       backgroundColor: gradient,
       fill: true,
-      tension: 0.4,
+      tension: 0.35,
       pointBackgroundColor: pointColors,
-      pointBorderColor: 'transparent',
-      pointRadius: pointRadius,
-      pointHoverRadius: 6,
+      pointBorderColor: pointColors,
+      pointRadius,
+      pointHoverRadius: 7,
     }]
   },
   options: {
-    responsive: true,
-    maintainAspectRatio: false,
+    responsive: true, maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#2c2c2e',
-        borderColor: 'rgba(255,255,255,0.1)',
+        backgroundColor: 'rgba(44,44,46,0.95)',
+        borderColor: 'rgba(255,255,255,0.08)',
         borderWidth: 1,
         titleColor: '#98989d',
         bodyColor: '#f5f5f7',
+        padding: 10,
         callbacks: {
           label: ctx => {
             const s = signals[ctx.dataIndex];
@@ -733,18 +457,8 @@ new Chart(ctx, {
       }
     },
     scales: {
-      x: {
-        grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-        ticks: { color: '#48484a', font: { size: 10 }, maxTicksLimit: 10 }
-      },
-      y: {
-        position: 'right',
-        grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-        ticks: {
-          color: '#48484a', font: { size: 10 },
-          callback: v => '$' + (v/1000).toFixed(0) + 'k'
-        }
-      }
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#98989d', font: { size: 10 }, maxTicksLimit: 8 } },
+      y: { position: 'right', grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#98989d', font: { size: 10 }, callback: v => '$' + (v/1000).toFixed(0) + 'K' } }
     }
   }
 });
