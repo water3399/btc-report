@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1c1c1e"/>
+      <stop offset="100%" style="stop-color:#2c2c2e"/>
+    </linearGradient>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8a9e8c"/>
+      <stop offset="100%" style="stop-color:#c4aa82"/>
+    </linearGradient>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#8a9e8c;stop-opacity:0.2"/>
+      <stop offset="50%" style="stop-color:#8a9e8c;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#c4aa82;stop-opacity:0.4"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="clip">
+      <rect width="1200" height="630" rx="0"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Ambient glow (green left) -->
+  <ellipse cx="200" cy="315" rx="280" ry="200" fill="rgba(138,158,140,0.06)"/>
+  <!-- Ambient glow (gold right) -->
+  <ellipse cx="1050" cy="200" rx="220" ry="180" fill="rgba(196,170,130,0.05)"/>
+
+  <!-- Mock price chart line (decorative) -->
+  <polyline
+    points="80,480 140,460 200,490 260,440 320,420 380,445 440,400 500,380 560,410 620,370 680,360 740,390 800,340 860,360 920,320 980,345 1040,310 1100,295 1160,315"
+    fill="none"
+    stroke="url(#lineGrad)"
+    stroke-width="2.5"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+  <!-- Chart fill -->
+  <polygon
+    points="80,480 140,460 200,490 260,440 320,420 380,445 440,400 500,380 560,410 620,370 680,360 740,390 800,340 860,360 920,320 980,345 1040,310 1100,295 1160,315 1160,550 80,550"
+    fill="url(#lineGrad)"
+    opacity="0.07"
+  />
+
+  <!-- Signal dots on chart -->
+  <circle cx="320" cy="420" r="5" fill="#b87a72" filter="url(#glow)"/>
+  <circle cx="500" cy="380" r="5" fill="#8a9e8c" filter="url(#glow)"/>
+  <circle cx="740" cy="390" r="5" fill="#b87a72" filter="url(#glow)"/>
+  <circle cx="920" cy="320" r="5" fill="#8a9e8c" filter="url(#glow)"/>
+  <circle cx="1100" cy="295" r="5" fill="#b87a72" filter="url(#glow)"/>
+
+  <!-- Logo box -->
+  <rect x="72" y="66" width="52" height="52" rx="14" fill="url(#logoGrad)"/>
+  <text x="98" y="101" text-anchor="middle" font-size="26" font-family="Arial">₿</text>
+
+  <!-- Title -->
+  <text x="140" y="91" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="700" fill="#f5f5f7" letter-spacing="-0.5">BTC Daily Report</text>
+  <text x="140" y="114" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="14" fill="#98989d" letter-spacing="0.3">量化訊號 · 技術分析 · 市場體制</text>
+
+  <!-- Divider line -->
+  <line x1="72" y1="148" x2="1128" y2="148" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+  <!-- Main price stat -->
+  <text x="72" y="240" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="72" font-weight="800" fill="#f5f5f7" letter-spacing="-3">$83,200</text>
+  <text x="72" y="278" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="16" fill="#98989d">BTC / USD · 今日收盤</text>
+
+  <!-- Stat cards row -->
+  <!-- Card 1: Fear & Greed -->
+  <rect x="72" y="310" width="210" height="88" rx="12" fill="rgba(184,122,114,0.12)" stroke="rgba(184,122,114,0.25)" stroke-width="1"/>
+  <text x="92" y="336" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="600" fill="#98989d" letter-spacing="1">恐懼貪婪指數</text>
+  <text x="92" y="372" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="36" font-weight="800" fill="#b87a72">11</text>
+  <text x="92" y="390" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="11" fill="rgba(184,122,114,0.8)">極度恐慌</text>
+
+  <!-- Card 2: Regime -->
+  <rect x="298" y="310" width="210" height="88" rx="12" fill="rgba(196,170,130,0.10)" stroke="rgba(196,170,130,0.22)" stroke-width="1"/>
+  <text x="318" y="336" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="600" fill="#98989d" letter-spacing="1">市場體制</text>
+  <text x="318" y="372" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="800" fill="#c4aa82">上升趨勢</text>
+  <text x="318" y="390" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="11" fill="rgba(196,170,130,0.7)">牛市累積期</text>
+
+  <!-- Card 3: Funding Rate -->
+  <rect x="524" y="310" width="210" height="88" rx="12" fill="rgba(138,158,140,0.10)" stroke="rgba(138,158,140,0.22)" stroke-width="1"/>
+  <text x="544" y="336" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="600" fill="#98989d" letter-spacing="1">Funding Rate</text>
+  <text x="544" y="372" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="800" fill="#8a9e8c">+0.01%</text>
+  <text x="544" y="390" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="11" fill="rgba(138,158,140,0.7)">多方溫和付費</text>
+
+  <!-- Card 4: Signal -->
+  <rect x="750" y="310" width="210" height="88" rx="12" fill="rgba(152,152,157,0.08)" stroke="rgba(152,152,157,0.18)" stroke-width="1"/>
+  <text x="770" y="336" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="600" fill="#98989d" letter-spacing="1">今日訊號</text>
+  <text x="770" y="372" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="800" fill="#98989d">觀望</text>
+  <text x="770" y="390" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="11" fill="rgba(152,152,157,0.7)">等待方向確認</text>
+
+  <!-- Bottom footer -->
+  <line x1="72" y1="575" x2="1128" y2="575" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="72" y="602" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="12" fill="rgba(152,152,157,0.5)" letter-spacing="0.5">water3399.github.io/btc-report</text>
+  <text x="1128" y="602" text-anchor="end" font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="12" fill="rgba(152,152,157,0.5)">量化策略 · System A · 技術面分析</text>
+</svg>
